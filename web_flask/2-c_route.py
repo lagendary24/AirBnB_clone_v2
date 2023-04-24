@@ -1,29 +1,31 @@
 #!/usr/bin/python3
-"""starts a Flask web application"""
-from flask import Flask
-from markupsafe import escape
+"""Start web application with two routings
+"""
 
+from flask import Flask
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
+@app.route('/')
 def hello():
-    """Greetings, hbnb project"""
+    """Return string when route queried
+    """
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb', strict_slashes=False)
+@app.route('/hbnb')
 def hbnb():
-    """Displays HBNB"""
+    """Return string when route queried
+    """
     return 'HBNB'
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def text_c(text):
-    """Displays 'C' followed by the value of the text variable"""
-    text = text.replace('_', ' ')
-    return "C {}".format(escape(text))
-
+@app.route('/c/<text>')
+def c_is_fun(text):
+    """Return reformatted text
+    """
+    return 'C ' + text.replace('_', ' ')
 
 if __name__ == '__main__':
+    app.url_map.strict_slashes = False
     app.run(host='0.0.0.0', port=5000)

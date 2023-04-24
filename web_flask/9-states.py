@@ -1,35 +1,30 @@
 #!/usr/bin/python3
-"""ALX SE Flask Module."""
+"""Start web application with two routings
+"""
+
 from models import storage
 from models.state import State
 from flask import Flask, render_template
-
-
 app = Flask(__name__)
 
 
-@app.route('/states', strict_slashes=False)
-def states_list():
-    """Render list of all states."""
-    states_list = storage.all(State)
-    return render_template(
-            '9-states.html', states=states_list, pass_with_id=False)
-
-
-@app.route('/states/<id>', strict_slashes=False)
-def states_by_id(id):
-    """Render list of all states."""
-    key = 'State.{}'.format(id)
-    states_list = storage.all(State)
-    state = states_list.get(key)
-    return render_template('9-states.html', state=state, pass_with_id=True)
+@app.route('/states')
+@app.route('/states/<id>')
+def states_list(id=None):
+    """Render template with states
+    """
+    path = '9-states.html'
+    states = storage.all(State)
+    return render_template(path, states=states, id=id)
 
 
 @app.teardown_appcontext
-def close_session(exception=None):
-    """Close the current session."""
+def app_teardown(arg=None):
+    """Clean-up session
+    """
     storage.close()
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.url_map.strict_slashes = False
+    app.run(host='0.0.0.0', port=5000)
